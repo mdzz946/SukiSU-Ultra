@@ -46,13 +46,13 @@ int ksu_install_fd(void)
     struct file *filp;
     int fd;
 
-    fd = get_unused_fd_flags(O_CLOEXEC);
+    fd = get_unused_fd_flags(0);
     if (fd < 0) {
         pr_err("ksu_install_fd: failed to get unused fd\n");
         return fd;
     }
 
-    filp = anon_inode_getfile("[ksu_driver]", &anon_ksu_fops, NULL, O_RDWR | O_CLOEXEC);
+    filp = anon_inode_getfile("[ksu_driver]", &anon_ksu_fops, NULL, O_RDWR);
     if (IS_ERR(filp)) {
         pr_err("ksu_install_fd: failed to create anon inode file\n");
         put_unused_fd(fd);
