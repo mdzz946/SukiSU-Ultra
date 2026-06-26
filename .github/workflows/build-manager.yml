@@ -177,7 +177,7 @@ jobs:
                  OutputStream out = new FileOutputStream(mainJar)) {
                 Utils.pump(in, out);
             }
-'''
+          '''
           new = '''            // Dump main.jar as trampoline
             if (mainJar.exists()) {
                 // Android rejects writable dex files when app_process loads CLASSPATH.
@@ -192,7 +192,7 @@ jobs:
             if (!mainJar.setReadOnly()) {
                 Log.w(TAG, "Failed to make main.jar read-only");
             }
-'''
+          '''
           if old not in text:
               raise SystemExit("RootServiceManager patch anchor not found")
           path.write_text(text.replace(old, new))
