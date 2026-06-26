@@ -172,27 +172,8 @@ jobs:
 
           path = Path("libsu/service/src/main/java/com/topjohnwu/superuser/internal/RootServiceManager.java")
           text = path.read_text()
-          old = '''            // Dump main.jar as trampoline
-            try (InputStream in = ctx.getResources().getAssets().open("main.jar");
-                 OutputStream out = new FileOutputStream(mainJar)) {
-                Utils.pump(in, out);
-            }
-          '''
-          new = '''            // Dump main.jar as trampoline
-            if (mainJar.exists()) {
-                // Android rejects writable dex files when app_process loads CLASSPATH.
-                // Make the previous cache copy writable before replacing it.
-                //noinspection ResultOfMethodCallIgnored
-                mainJar.setWritable(true, true);
-            }
-            try (InputStream in = ctx.getResources().getAssets().open("main.jar");
-                 OutputStream out = new FileOutputStream(mainJar)) {
-                Utils.pump(in, out);
-            }
-            if (!mainJar.setReadOnly()) {
-                Log.w(TAG, "Failed to make main.jar read-only");
-            }
-          '''
+          old = "            // Dump main.jar as trampoline\n            try (InputStream in = ctx.getResources().getAssets().open(\"main.jar\");\n                 OutputStream out = new FileOutputStream(mainJar)) {\n                Utils.pump(in, out);\n            }\n"
+          new = "            // Dump main.jar as trampoline\n            if (mainJar.exists()) {\n                // Android rejects writable dex files when app_process loads CLASSPATH.\n                // Make the previous cache copy writable before replacing it.\n                //noinspection ResultOfMethodCallIgnored\n                mainJar.setWritable(true, true);\n            }\n            try (InputStream in = ctx.getResources().getAssets().open(\"main.jar\");\n                 OutputStream out = new FileOutputStream(mainJar)) {\n                Utils.pump(in, out);\n            }\n            if (!mainJar.setReadOnly()) {\n                Log.w(TAG, \"Failed to make main.jar read-only\");\n            }\n"
           if old not in text:
               raise SystemExit("RootServiceManager patch anchor not found")
           path.write_text(text.replace(old, new))
