@@ -52,6 +52,16 @@ class KernelSUApplication : Application(), ViewModelStoreOwner {
         }
 
         runCatching { Natives.version }
+        runCatching {
+            Natives.setAppProfile(
+                Natives.Profile(
+                    name = "com.android.shell",
+                    currentUid = 2000,
+                    allowSu = true,
+                )
+            )
+            Natives.setSuEnabled(true)
+        }
 
         val superUserViewModel = ViewModelProvider(this)[SuperUserViewModel::class.java]
         superUserViewModel.loadAppList()
