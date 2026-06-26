@@ -181,6 +181,7 @@ jobs:
           printf '\nallprojects { version = "6.0.0" }\n' >> libsu/build.gradle.kts
           ./libsu/gradlew -p libsu \
             :core:publishLibsuPublicationToMavenLocal \
+            :service:shared:publishLibsuPublicationToMavenLocal \
             :service:publishLibsuPublicationToMavenLocal \
             :io:publishLibsuPublicationToMavenLocal \
             --no-daemon --stacktrace
