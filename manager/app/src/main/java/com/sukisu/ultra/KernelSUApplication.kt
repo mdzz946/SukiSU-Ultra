@@ -51,6 +51,8 @@ class KernelSUApplication : Application(), ViewModelStoreOwner {
             setEnableOnBackInvokedCallback(applicationInfo, enable)
         }
 
+        runCatching { Natives.version }
+
         val superUserViewModel = ViewModelProvider(this)[SuperUserViewModel::class.java]
         superUserViewModel.loadAppList()
 

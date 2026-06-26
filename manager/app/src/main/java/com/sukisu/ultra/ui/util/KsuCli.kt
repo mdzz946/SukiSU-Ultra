@@ -48,6 +48,11 @@ object KsuCli {
     val GLOBAL_MNT_SHELL: Shell = createRootShell(true)
 }
 
+private fun warmUpDriverFd() {
+    runCatching { Natives.version }
+        .onFailure { Log.w(TAG, "failed to warm up driver fd", it) }
+}
+
 fun getRootShell(globalMnt: Boolean = false): Shell {
     return if (globalMnt) KsuCli.GLOBAL_MNT_SHELL else {
         KsuCli.SHELL
@@ -75,6 +80,7 @@ fun Uri.getFileName(context: Context): String? {
 
 fun createRootShell(globalMnt: Boolean = false): Shell {
     Shell.enableVerboseLogging = BuildConfig.DEBUG
+    warmUpDriverFd()
     val builder = Shell.Builder.create()
     return try {
         if (globalMnt) {
